@@ -1,0 +1,18 @@
+#%RAML 1.0
+title: account-eapi
+
+uses:
+  lib: library/library-datatype.raml
+
+traits:
+  post-req: !include traits/post-req-trait.raml
+
+resourceTypes:
+  post-met: !include resourceType/post-resourceType.raml
+
+/eapi/account:
+    type:
+      post-met
+
+
+          

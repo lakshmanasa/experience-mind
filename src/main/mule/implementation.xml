@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+
+	<flow name="account-eapi-mindFlow" doc:id="21bf651c-381b-4318-bd9f-561c8e4bf9bf" >
+		<json-logger:logger doc:name="Json-Logger" doc:id="15183881-bf38-4640-acd3-f9abdbd5f03f" config-ref="JSON_Logger_Config" message="Before entered into Experience API, the payload is this::::::"/>
+		<ee:transform doc:name="values of /papi/sfdc to insert the data" doc:id="80f9670f-becb-446e-8b95-8d317ae873ff" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="port" ><![CDATA['${http.req.sfdc.port}']]></ee:set-variable>
+				<ee:set-variable variableName="basepath" ><![CDATA["/api/papi"]]></ee:set-variable>
+				<ee:set-variable variableName="path" ><![CDATA["/sfdc/accounts"]]></ee:set-variable>
+				<ee:set-variable variableName="method" ><![CDATA["POST"]]></ee:set-variable>
+				<ee:set-variable variableName="host" ><![CDATA['${http.req.host}']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="calling to common HttpRequest" doc:id="982eddd1-aabc-4619-a59b-8df2eb48be5b" name="common-HttpRequest"/>
+		<ee:transform doc:name="Transform Message" doc:id="6f457fa2-af54-42fc-92e1-8d0ae5d78e76" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="Logger" doc:id="bd9cd353-5312-4322-90ae-d3cd03379f65" config-ref="JSON_Logger_Config" message="After Completion of Experience API, the payload is this::::::"/>
+	</flow>
+</mule>
